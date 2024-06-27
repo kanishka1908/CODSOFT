@@ -1,0 +1,76 @@
+todolist.py
+import json
+
+# Function to load tasks from a file
+def load_tasks():
+    try:
+        with open('tasks.json', 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return []
+
+# Function to save tasks to a file
+def save_tasks(tasks):
+    with open('tasks.json', 'w') as f:
+        json.dump(tasks, f)
+
+# Function to add a new task
+def add_task(tasks):
+    name = input("Enter task name: ")
+    due_date = input("Enter due date (optional): ")
+    priority = input("Enter priority (low, medium, high): ")
+    tasks.append({
+        'name': name,
+        'due_date': due_date,
+        'priority': priority,
+        'completed': False
+    })
+    print("Task added successfully!")
+
+# Function to view all tasks
+def view_tasks(tasks):
+    if not tasks:
+        print("No tasks found.")
+    else:
+        for index, task in enumerate(tasks, start=1):
+            status = 'Completed' if task['completed'] else 'Not Completed'
+            print(f"{index}. {task['name']} - Due: {task['due_date']} - Priority: {task['priority']} - Status: {status}")
+
+# Function to update task status
+def update_task(tasks):
+    view_tasks(tasks)
+    task_index = int(input("Enter task number to update (0 to cancel): "))
+    if 1 <= task_index <= len(tasks):
+        tasks[task_index - 1]['completed'] = True
+        print("Task updated successfully!")
+    elif task_index != 0:
+        print("Invalid task number!")
+
+# Main function to run the application
+def main():
+    tasks = load_tasks()
+    
+    while True:
+        print("\n===== To-Do List Menu =====")
+        print("1. Add Task")
+        print("2. View Tasks")
+        print("3. Update Task Status")
+        print("4. Save and Exit")
+        
+        choice = input("Enter your choice (1-4): ")
+        
+        if choice == '1':
+            add_task(tasks)
+        elif choice == '2':
+            view_tasks(tasks)
+        elif choice == '3':
+            update_task(tasks)
+        elif choice == '4':
+            save_tasks(tasks)
+            print("Tasks saved. Exiting...")
+            break
+        else:
+            print("Invalid choice. Please enter a number from 1 to 4.")
+
+if _name_ == "_main_":
+    main()
